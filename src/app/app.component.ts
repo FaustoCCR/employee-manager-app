@@ -3,6 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {Employee} from './model/employee';
 import {EmployeeService} from './service/employee.service';
 import {NgForm} from "@angular/forms";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -41,7 +42,7 @@ export class AppComponent implements OnInit {
         this.employees = response;
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.showAlert({title: 'Error', text: error.message, icon: 'error'});
       }
     );
   }
@@ -76,11 +77,11 @@ export class AppComponent implements OnInit {
     if (this.modalMode === 'add') {
       this.employeeService.addEmployee(addForm.value).subscribe(
         (response) => {
-          console.log(response);
+          this.showAlert({title: 'Success', text: 'Employee created', icon: 'success'});
           this.getEmployees();
         },
         (error: HttpErrorResponse) => {
-          alert(error.message)
+          this.showAlert({title: 'Error', text: error.message, icon: 'error'});
         }
       )
     }
@@ -88,11 +89,11 @@ export class AppComponent implements OnInit {
     if (this.modalMode === 'edit') {
       this.employeeService.updateEmployee(this.employeeTemplate).subscribe(
         (response) => {
-          console.log(response);
+          this.showAlert({title: 'Success', text: 'Employee updated', icon: 'success'});
           this.getEmployees();
         },
         (error: HttpErrorResponse) => {
-          alert(error.message)
+          this.showAlert({title: 'Error', text: error.message, icon: 'error'});
         }
       )
     }
@@ -101,11 +102,22 @@ export class AppComponent implements OnInit {
   public onDeleteEmployee(employeeId: number): void {
     this.employeeService.deleteEmployee(employeeId).subscribe(
       (response) => {
+        this.showAlert({title: 'Success', text: 'Employee was deleted', icon: 'info'});
         this.getEmployees();
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.showAlert({title: 'Error', text: error.message, icon: 'error'});
       }
     )
+  }
+
+  public showAlert(messageObject: { title: string, text: string, icon: 'error' | 'success' | 'info' }) {
+    Swal.fire({
+      title: messageObject.title,
+      text: messageObject.text,
+      icon: messageObject.icon,
+      showConfirmButton: false,
+      timer: 1500
+    });
   }
 }
