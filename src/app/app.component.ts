@@ -16,9 +16,13 @@ export class AppComponent implements OnInit {
   public employeeTemplate: Employee;
   public modalMode: string;
 
+  // property to filter pipe
+  public filterPost;
+
   constructor(private employeeService: EmployeeService) {
     this.employeeTemplate = this.cleanEmployee();
     this.modalMode = '';
+    this.filterPost = '';
   }
 
   ngOnInit(): void {
